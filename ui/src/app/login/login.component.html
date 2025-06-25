@@ -1,0 +1,41 @@
+<main class="mx-auto flex min-h-screen w-full items-center justify-center dark:bg-gray-900 bg-slate-100 text-black dark:text-white relative">
+    <i (click)="toggleDarkMode()" class="fa-solid absolute top-5 right-5" [class]="isDarkMode ? 'fa-moon dark:text-white' : 'fa-sun text-gray-900'"></i>
+    
+    <form (submit)="login()" class="flex w-[30rem] flex-col bg-transparent space-y-6 drop-shadow-md rounded-sm p-5">
+        <div class="icon mx-auto"></div>
+        <div class="text-center text-lg font-bold ">LOGIN</div>
+
+        <div class="w-full transform border-b-2 bg-transparent text-lg duration-300 focus-within:border-red-500">
+            <input type="text" name="username" placeholder="Email" [(ngModel)]="userData.email"
+                class="w-full border-none px-2 bg-transparent text-sm outline-none placeholder:italic focus:red-none" />
+        </div>
+
+        <div class="w-full transform border-b-2 bg-transparent text-lg duration-300 focus-within:border-red-500">
+            <input type="password" name="password" placeholder="Password" [(ngModel)]="userData.password"
+                class="w-full border-none px-2 bg-transparent text-sm outline-none placeholder:italic focus:outline-none" />
+        </div>
+
+        <div class="w-full transform border-b-2 bg-transparent text-lg duration-300 focus-within:border-red-500">
+            <select required="" [(ngModel)]="signinAs" name="signinAs" [class]="signinAs == 'default' ? 'font-semibold text-gray-800' : ''" class="w-full border-none px-2  bg-transparent text-sm outline-none">
+                <option class="font-semibold text-gray-800" value="default" disabled selected>Who are you Signin As?</option>
+                <option value="admin">Admin</option>
+                <option value="teacher">Teacher</option>
+            </select>
+        </div>
+
+        <button  type="submit" class="transform rounded-sm bg-red-700 py-2 font-bold duration-300 hover:bg-red-600">
+            LOG IN
+        </button>
+
+        <div *ngIf="errorMessage" class="text-red-500 text-sm mt-2">
+            {{ errorMessage }}
+          </div>
+
+        <a href="#" class="transform text-center text-sm font-semibold text-gray-500 duration-300 hover:text-gray-300">FORGOT
+            PASSWORD?</a>
+
+        <p class="text-center text-sm" style="margin-top: 2px;">
+            Contact your administrator
+        </p>
+    </form>
+</main>

@@ -1,0 +1,33 @@
+/* Autofill styling */
+input:-webkit-autofill {
+    // Light mode styles
+    -webkit-box-shadow: 0 0 0px 1000px white inset; // Light background
+    box-shadow: 0 0 0px 1000px white inset;
+    -webkit-text-fill-color: #000; // Black text for light mode
+    transition: background-color 5000s ease-in-out 0s;
+  }
+  
+  .dark body {
+    input:-webkit-autofill {
+      -webkit-box-shadow: 0 0 0px 1000px #1a202c inset; // Dark background
+      box-shadow: 0 0 0px 1000px #1a202c inset;
+      -webkit-text-fill-color: #fff !important // White text for dark mode
+    }
+  }
+
+
+  .icon {
+    width: 80px;
+    height: 50px;
+    background-color: rgb(185 28 28 );
+    -webkit-mask-image: url('../../assets/images/RTD_Logo-04\ 1.svg');
+    mask-image: url('../../assets/images/RTD_Logo-04\ 1.svg');
+    -webkit-mask-size: cover;
+    mask-size: cover;
+  }
+
+  form{
+    backdrop-filter: blur(30px) !important;
+    box-shadow: 0px 0px 50px rgba(227, 228, 237, 0.37) !important;
+    // border:  2px solid rgba(255, 255, 255, 0.18) !important;
+  }

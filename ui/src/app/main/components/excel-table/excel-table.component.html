@@ -1,0 +1,75 @@
+  <div class=" top-2 right-2">
+    <i class="bi bi-trash3-fill text-red-500 hover:text-red-700 transform transition-transform duration-200 hover:text-sm"
+       (dragover)="allowDrop($event)"
+       (drop)="drop($event)">
+    </i>
+  </div>
+  <div class=" flex flex-col w-full h-4/5 overflow-auto bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-300  rounded-lg bg-clip-border">
+
+  <!-- Trash Icon -->
+
+
+  <!-- Table -->
+  <table class="table-auto w-full relative">
+    <thead class="sticky top-0 z-50 bg-slate-200 dark:bg-slate-700">
+      <tr>
+        <th class="p-4 border-b border-slate-300 dark:border-slate-600 sticky left-0 z-[60] bg-slate-200 dark:bg-slate-700">
+          Book Title
+        </th>
+        <th class="p-4 border-b border-slate-300 dark:border-slate-600">
+          Author
+        </th>
+        <th class="p-4 border-b border-slate-300 dark:border-slate-600">
+          Year
+        </th>
+        <th class="p-4 border-b border-slate-300 dark:border-slate-600">
+          Genre
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let book of books; let i = index"
+          class="group hover:bg-slate-100 dark:hover:bg-slate-700">
+        
+        <!-- Draggable Title -->
+        <td class="p-1 border-b border-slate-200 dark:border-slate-700 sticky left-0 z-40 cursor-move bg-slate-50 dark:bg-slate-900 group-hover:bg-slate-200 dark:group-hover:bg-slate-800"
+            draggable="true"
+            (dragstart)="drag($event, i)">
+          {{ book.title }}
+        </td>
+
+        <!-- Author Cell (Editable) -->
+        <td class="p-1 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 group-hover:bg-slate-100 dark:group-hover:bg-slate-700"
+            (dblclick)="enableEdit(i, 'author')">
+          <div *ngIf="!isEditing(i, 'author')">{{ book.author }}</div>
+          <input *ngIf="isEditing(i, 'author')"
+                 class="w-full p-0 bg-slate-100 dark:bg-slate-700 outline-none"
+                 [(ngModel)]="book.author"
+                 (blur)="disableEdit()" />
+        </td>
+
+        <!-- Year Cell (Editable) -->
+        <td class="p-1 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 group-hover:bg-slate-200 dark:group-hover:bg-slate-800"
+            (dblclick)="enableEdit(i, 'year')">
+          <div *ngIf="!isEditing(i, 'year')">{{ book.year }}</div>
+          <input *ngIf="isEditing(i, 'year')"
+                 class="w-full p-0 bg-slate-100 dark:bg-slate-700 outline-none"
+                 [(ngModel)]="book.year"
+                 (blur)="disableEdit()" />
+        </td>
+
+        <!-- Genre Cell (Editable) -->
+        <td class="p-1 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 group-hover:bg-slate-100 dark:group-hover:bg-slate-700"
+            (dblclick)="enableEdit(i, 'genre')">
+          <div *ngIf="!isEditing(i, 'genre')">{{ book.genre }}</div>
+          <input *ngIf="isEditing(i, 'genre')"
+                 class="w-full p-0 bg-slate-100 dark:bg-slate-700 outline-none"
+                 [(ngModel)]="book.genre"
+                 (blur)="disableEdit()" />
+        </td>
+
+      </tr>
+    </tbody>
+  </table>
+</div>

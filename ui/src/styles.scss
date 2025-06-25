@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+html {
+    transition: background-color 0.3s, color 0.3s;
+  }
+
+
+  
+
+// /* Works on Firefox */
+// * {
+//   scrollbar-width: thin;
+//   scrollbar-color: rgb(231, 27, 0) rgba(231, 231, 231, 0.616);
+//   border-radius: 10px;
+// }
+
+// /* Works on Chrome, Edge, and Safari */
+// *::-webkit-scrollbar {
+//   width: 12px;
+// }
+
+// /* Track (scrollbar background) */
+// *::-webkit-scrollbar-track {
+//   background: rgba(231, 231, 231, 0.616);
+//   border-radius: 10px; /* Ensure track is rounded */
+// }
+
+// /* Handle (scrollbar itself) */
+// *::-webkit-scrollbar-thumb {
+//   background-color: rgb(231, 27, 0);
+//   border-radius: 10px; /* This applies rounded corners */
+//   border: 3px solid rgba(231, 231, 231, 0.616);
+// }
+
+// /* Optional: Handle when hovered */
+// *::-webkit-scrollbar-thumb:hover {
+//   background-color: darkred;
+// }

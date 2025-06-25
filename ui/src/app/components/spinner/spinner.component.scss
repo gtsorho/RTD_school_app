@@ -1,0 +1,68 @@
+
+// .spinner {
+//     width: 50px;
+//     height: 50px;
+//   }
+
+  .spinner path {
+    fill: none;
+    stroke-width: 300;
+    stroke-dasharray: 10000;
+    stroke-dashoffset: 10000;
+    animation: draw 5s ease-in-out infinite;
+  }
+
+.spinner-red  {
+    path{
+        stroke: red;
+    }
+}
+
+.spinner-black {
+    path {
+        stroke: black;
+    }
+}
+
+.spinner-white {
+    path {
+        stroke: white;
+    }
+}
+
+.spinner-green {
+    path {
+        stroke: green;
+    }
+}
+
+.spinner-xs {
+    width: 20px;
+    height: 20px;
+}
+
+.spinner-sm {
+    width: 30px;
+    height: 30px;
+}
+
+.spinner-md {
+    width: 50px;
+    height: 50px;
+}
+
+.spinner-lg {
+    width: 70px;
+    height: 70px;
+}
+  @keyframes draw {
+    0% {
+      stroke-dashoffset: 10000;
+    }
+    50% {
+      stroke-dashoffset: 0;
+    }
+    100% {
+      stroke-dashoffset: 10000;
+    }
+  }

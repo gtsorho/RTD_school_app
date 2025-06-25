@@ -1,0 +1,66 @@
+<div class="flex">
+  <div class="h-screen pb-8 overflow-y-auto bg-gray-100 border-l sm:w-64 w-60 dark:bg-gray-900 dark:border-gray-700">
+          <div  class="grid gap-4 gap-y-2 py-3  bg-red-700 shadow-lg text-sm grid-cols-1 md:grid-cols-6 px-2">
+              <div class="md:col-span-3">
+                <select
+                  id="subject"
+                  name="subject"
+                  (change)="getStudents()"
+                  [(ngModel)]="selectedSubject"
+                  class="h-8   focus:outline-none mt-1 rounded px-4 w-full bg-red-400 text-white hover:text-white font-bold"
+                >
+                  <option class="hover:text-white"
+                    *ngFor="let subject of subjects"
+                    [value]="subject.id"
+                  >
+                    {{ subject.name }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="md:col-span-3">
+                <select
+                  id="class"
+                  name="class"
+                  (change)="getStudents()"
+                  [(ngModel)]="selectedClass"
+                  class="h-8   focus:outline-none mt-1 rounded px-4 w-full bg-red-400 text-white hover:text-white font-bold"
+                >
+                  <option
+                    *ngFor="let class of classes"
+                    [value]="class.id"
+                  >
+                    {{ class.name }}
+                  </option>
+                </select>
+              </div>
+              <div class="md:col-span-6">
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  [(ngModel)]="searchStudentName"
+                  placeholder="john doe"
+                  class="h-8 focus:outline-none mt-1 rounded px-4 w-full bg-red-400 text-white font-bold"
+                />
+              </div>
+
+            </div>
+      <div class="mt-3 space-y-1">
+          <p class="text-center text-gray-600">{{students.length}} student(s) found</p>
+          <button  *ngFor="let student of students" class="flex items-center w-full px-5 py-2 transition-colors duration-200 dark:hover:bg-gray-800 gap-x-2 hover:bg-gray-300 focus:outline-none">
+              <img class="object-cover w-8 h-8 rounded-full" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=faceare&facepad=3&w=688&h=688&q=100" alt="">
+          
+              <div class="text-left rtl:text-right">
+                  <h1 class="text-sm font-medium text-gray-700 capitalize dark:text-white">{{student.name}}</h1>
+
+                  <p class="text-xs text-gray-400 dark:text-gray-300 capitalize">{{student.class.name}}</p>
+              </div>
+          </button>
+      </div>
+  </div>
+  <div class="h-screen py-8 overflow-y-auto mx-auto dark:bg-gray-900 dark:border-gray-700 flex-1">
+    <app-excel-table></app-excel-table>
+  </div>
+</div>
+
