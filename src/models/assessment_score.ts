@@ -5,7 +5,9 @@ export const createAssessmentScoreModel = (sequelize: Sequelize) => {
     title: { type: DataTypes.STRING, allowNull: false },
     score: { type: DataTypes.DECIMAL(5, 2), allowNull: false },
     weight: { type: DataTypes.DECIMAL(5, 2), allowNull: false },
-    effort: { type: DataTypes.STRING, allowNull: true }
+    effort: { type: DataTypes.STRING, allowNull: true },
+    comment: { type: DataTypes.TEXT, allowNull: true }
+
   });
 };
 

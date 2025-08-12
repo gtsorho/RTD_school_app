@@ -1,0 +1,355 @@
+<div class="px-3 h-full">
+  <div>
+    <form
+      class="w-full border-t-8 py-3 px-2 border-red-700 inline-block align-bottom bg-white rounded-b text-left overflow-hidden shadow-xl transform transition-all sm:mb-8 sm:mt-2 sm:align-middle sm:w-full"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-headline"
+    >
+      <div class="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-9">
+        <div class="md:col-span-3">
+          <label for="subject" class="text-gray-600">Subject</label>
+          <select
+            id="subject"
+            name="subject"
+            (change)="getStudents()"
+            [(ngModel)]="selectedSubject"
+            class="h-8 border text-gray-700 focus:border-red-700 focus:ring-red-700 focus:outline-none mt-1 rounded px-4 w-full bg-gray-50"
+          >
+            <option
+              class="hover:text-white"
+              *ngFor="let subject of subjects"
+              [value]="subject.id"
+            >
+              {{ subject.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="md:col-span-3">
+          <label for="class" class="text-gray-600">Class</label>
+          <select
+            id="class"
+            name="class"
+            [(ngModel)]="selectedClass"
+            (change)="getStudents()"
+            class="h-8 border text-gray-700 uppercase focus:border-red-700 focus:ring-red-700 focus:outline-none mt-1 rounded px-4 w-full bg-gray-50"
+          >
+            <option *ngFor="let class of classes" [value]="class.id">
+              {{ class.name }}
+            </option>
+          </select>
+        </div>
+        <div class="md:col-span-3">
+          <label for="assessment_type" class="text-gray-600"
+            >Assessment Type</label
+          >
+          <select
+            id="assessment_type"
+            name="assessment_type"
+            [(ngModel)]="selectedAssessment"
+            (change)="getStudents()"
+            class="h-8 border text-gray-700 uppercase focus:border-red-700 focus:ring-red-700 focus:outline-none mt-1 rounded px-4 w-full bg-gray-50"
+          >
+            <option
+              class="capitalize"
+              *ngFor="let assessment of assessments"
+              [value]="assessment.id"
+            >
+              {{ assessment.type }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="my-4">
+    <h2 class="text-2xl font-semibold text-gray-700">
+      Student Assessment Scores
+    </h2>
+    <p class="text-sm text-gray-500">
+      Select a subject, class, and assessment type to grade students.
+    </p>
+  </div>
+  <div
+    class="grid gap-0 text-sm grid-cols-1 max-h-[5.5in] shadow-xl rounded overflow-auto bg-white/70 md:grid-cols-6"
+  >
+    <div class="md:col-span-6 relative">
+      <div class="max-w-full mx-auto p-8">
+        <div
+          class="overflow-auto max-h-[3in] rounded shadow-lg border border-gray-200"
+        >
+          <table class="min-w-full table-fixed divide-y divide-gray-200">
+            <thead class="bg-gray-50 sticky top-0 z-10">
+              <tr>
+                <th
+                  scope="col"
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-100 sticky left-0 z-20"
+                >
+                  Student Name
+                </th>
+                <th
+                  scope="col"
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50"
+                >
+                  Assessment Name
+                </th>
+                <th
+                  scope="col"
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-100"
+                >
+                  Over
+                </th>
+                <th
+                  scope="col"
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50"
+                >
+                  Score
+                </th>
+                <th
+                  scope="col"
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-100"
+                >
+                  Effort
+                </th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr
+                *ngFor="let score of scores; let i = index"
+                class="hover:bg-gray-100"
+              >
+                <td
+                  class="sticky left-0 z-10 px-6 whitespace-nowrap text-sm font-medium capitalize text-gray-900 bg-gray-50"
+                >
+                  {{ getStudentName(score.student_id ?? "") }}
+                </td>
+                <td
+                  class="px-6 whitespace-nowrap capitalize text-sm text-gray-500 bg-white"
+                >
+                  {{ getAssessmentName((score.assessment_id ?? 0).toString()) }}
+                </td>
+                <td
+                  class="px-6 whitespace-nowrap text-sm text-gray-500 bg-gray-50"
+                >
+                  {{ score.weight }}
+                </td>
+                <td
+                  class="px-6 whitespace-nowrap text-sm text-gray-500 bg-white"
+                >
+                  <input
+                    type="text"
+                    [(ngModel)]="score.score"
+                    (change)="onScoreChange(i, $event)"
+                    class="h-8 border border-transparent text-gray-700 focus:border-1 focus:border-red-700 focus:ring-red-700 focus:outline-none mt-1 rounded px-4 w-full"
+                  />
+                </td>
+                <td
+                  class="px-6 whitespace-nowrap text-sm text-gray-500 bg-gray-50"
+                >
+                  <input
+                    type="text"
+                    [(ngModel)]="score.effort"
+                    (change)="onEffortChange(i, $event)"
+                    class="h-8 border border-transparent text-gray-700 focus:border-red-700 focus:ring-red-700 focus:outline-none mt-1 rounded px-4 w-full bg-transparent"
+                  />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="text-end p-2">
+          <button
+            (click)="saveScores()"
+            class="px-8 py-3 bg-red-600 text-white font-semibold rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition duration-300 ease-in-out transform hover:scale-105"
+          >
+            Submit Scores
+          </button>
+        </div>
+
+        <!-- <div *ngIf="savedData" class="mt-8 p-4 bg-green-100 border border-green-400 text-green-700 rounded-md">
+                <h3 class="font-semibold mb-2">Saved Data (Check Console for full object):</h3>
+                <pre class="whitespace-pre-wrap text-sm">{{ savedData | json }}</pre>
+              </div> -->
+      </div>
+    </div>
+    <div
+      *ngIf="loading"
+      class="z-50 absolute inset-0 flex items-center justify-center bg-gray-500 bg-opacity-70"
+    >
+      <app-spinner color="spinner-white" size="spinner-sm"></app-spinner>
+    </div>
+  </div>
+</div>
+
+<!-- Modal and Overlay -->
+<div
+  *ngIf="showModal"
+  class="fixed inset-0 z-50 flex items-center justify-center"
+>
+  <!-- Background overlay -->
+  <div
+    class="absolute inset-0 bg-black bg-opacity-50"
+    (click)="closeModal()"
+    aria-hidden="true"
+  ></div>
+
+  <!-- Modal -->
+  <div
+    class="relative bg-red-50 px-6 rounded shadow-lg z-60"
+    (click)="$event.stopPropagation()"
+  >
+    <div class="">
+      <form
+        #formRef="ngForm"
+        class="w-full inline-block align-bottom rounded-sm text-left overflow-hidden border-l-4 border-red-700 transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-headline"
+      >
+        <div class="b px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+          <div class="sm:flex sm:items-start">
+            <div class="text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+              <div class="flex justify-start space-x-3">
+                <div
+                  class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10"
+                >
+                  <i class="bi bi-calendar-plus text-red-600"></i>
+                </div>
+                <h3
+                  class="text-lg leading-6 font-bold text-gray-700 pt-2"
+                  id="modal-headline"
+                >
+                  Grade Assessment
+                </h3>
+              </div>
+              <div class="">
+                <div
+                  class="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-6"
+                >
+                  <div class="md:col-span-4">
+                    <label for="title" class="text-gray-600">Title</label>
+                    <input
+                      type="text"
+                      id="title"
+                      name="title"
+                      [(ngModel)]="score.title"
+                      placeholder="English"
+                      class="h-8 border text-gray-700 focus:border-red-700 focus:ring-red-700 focus:outline-none mt-1 rounded px-4 w-full bg-gray-50"
+                    />
+                  </div>
+                  <div class="md:col-span-2">
+                    <label for="weight" class="text-gray-600">Weight</label>
+                    <input
+                      type="text"
+                      id="weight"
+                      name="weight"
+                      [(ngModel)]="score.weight"
+                      placeholder=" ENG "
+                      class="h-8 border text-gray-700 focus:border-red-700 focus:ring-red-700 focus:outline-none mt-1 rounded px-4 w-full bg-gray-50"
+                    />
+                  </div>
+                  <div
+                    class="md:col-span-6 rounded shadow-lg border border-red-700 px-2"
+                  >
+                    <div
+                      *ngIf="!scoringcompleted"
+                      class="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-6"
+                    >
+                      <div class="md:col-span-6">
+                        <label for="start_date" class="text-gray-600"
+                          >Student</label
+                        >
+                        <select
+                          id="start_date"
+                          name="start_date"
+                          [(ngModel)]="score.student_id"
+                          class="h-8 border text-gray-700 focus:border-red-700 focus:ring-red-700 focus:outline-none mt-1 rounded px-4 w-full bg-gray-50"
+                        >
+                          <option
+                            *ngFor="let student of students"
+                            [value]="student.id"
+                          >
+                            {{ student.name }}
+                          </option>
+                        </select>
+                      </div>
+                      <div class="md:col-span-3">
+                        <label for="score" class="text-gray-600">Score</label>
+                        <input
+                          type="text"
+                          id="score"
+                          name="score"
+                          [(ngModel)]="score.score"
+                          placeholder="20"
+                          class="h-8 border text-gray-700 focus:border-red-700 focus:ring-red-700 focus:outline-none mt-1 rounded px-4 w-full bg-gray-50"
+                        />
+                      </div>
+                      <div class="md:col-span-3">
+                        <label for="effort" class="text-gray-600">Effort</label>
+                        <input
+                          type="text"
+                          id="effort"
+                          name="effort"
+                          [(ngModel)]="score.effort"
+                          placeholder="10"
+                          class="h-8 border text-gray-700 focus:border-red-700 focus:ring-red-700 focus:outline-none mt-1 rounded px-4 w-full bg-gray-50"
+                        />
+                      </div>
+                      <div class="md:col-span-3">
+                        <label for="effort" class="text-gray-600">Comment</label>
+                        <textarea
+                          type="text"
+                          id="effort"
+                          name="effort"
+                          [(ngModel)]="score.comment"
+                          placeholder="10"
+                          class="h-8 border text-gray-700 focus:border-red-700 focus:ring-red-700 focus:outline-none mt-1 rounded px-4 w-full bg-gray-50"
+                        ></textarea>
+                      </div>
+                      <div class="md:col-span-6 flex justify-end">
+                        <button
+                          type="button"
+                          (click)="addScore()"
+                          class="w-full my-2 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-500 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+                        >
+                          {{ scoreingStudent }}/ {{ students.length }} Next
+                          Student
+                        </button>
+                      </div>
+                    </div>
+                    <div
+                      *ngIf="scoringcompleted"
+                      class="bg-green-600 shadow-md rounded p-2 text-white text-center font-bold tracking-wide my-2"
+                    >
+                      Student List Complete {{ scores.length }}/
+                      {{ students.length }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="errorMessage" class="text-red-500 text-sm mt-2">
+          {{ errorMessage }}
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<button
+  class="fixed bottom-8 right-8 z-50 bg-green-700 hover:bg-green-800 text-white rounded-full px-3 py-3 shadow-lg transition-all flex items-center justify-center hover:scale-110"
+  (click)="showModal = !showModal"
+  aria-label="Show Chart"
+  style="font-size: 2rem"
+>
+  <img
+    class="w-auto h-7"
+    src="../../assets/images/icons/grade_white.png"
+    alt=""
+  />
+</button>

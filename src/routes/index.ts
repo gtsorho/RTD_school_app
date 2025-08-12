@@ -67,6 +67,7 @@ router.put('/subjects/:id', authenticateJWT(['admin']), subject.update);
 // Term Management Routes
 router.post('/terms', authenticateJWT(['admin']), term.create);
 router.get('/terms', authenticateJWT(['admin']), term.getAll);
+router.get('/terms/active', authenticateJWT(['admin']), term.getActive);
 router.get('/terms/:id', authenticateJWT(['admin']), term.getOne);
 router.delete('/terms/:id', authenticateJWT(['admin']), term.delete);
 router.put('/terms/:id', authenticateJWT(['admin']), term.update);
@@ -81,21 +82,22 @@ router.put('/assessments/:id', authenticateJWT(['admin']), assessmentController.
 router.delete('/assessments/:id', authenticateJWT(['admin']), assessmentController.delete);
 
 // Final Assessment Management Routes
-router.post('/final_assessments', authenticateJWT(['admin']), finalAssessmentController.create);
-router.get('/final_assessments', authenticateJWT(['admin']), finalAssessmentController.getAll);
-router.get('/final_assessments/:id', authenticateJWT(['admin']), finalAssessmentController.getOne);
-router.put('/final_assessments/:id', authenticateJWT(['admin']), finalAssessmentController.update);
-router.delete('/final_assessments/:id', authenticateJWT(['admin']), finalAssessmentController.delete);
+router.post('/final_assessments', authenticateJWT(['user','admin']), finalAssessmentController.calculateFinalAssessment);
+router.get('/final_assessments', authenticateJWT(['user']), finalAssessmentController.getAll);
+router.get('/final_assessments/:id', authenticateJWT(['user']), finalAssessmentController.getOne);
+router.put('/final_assessments/:id', authenticateJWT(['user']), finalAssessmentController.update);
+router.delete('/final_assessments/:id', authenticateJWT(['user']), finalAssessmentController.delete);
 
 // Assessment Score Management Routes
-router.post('/assessment_scores', authenticateJWT(['admin']), assessmentScoreController.create);
-router.get('/assessment_scores', authenticateJWT(['admin']), assessmentScoreController.getAll);
-router.get('/assessment_scores/:id', authenticateJWT(['admin']), assessmentScoreController.getOne);
-router.put('/assessment_scores/:id', authenticateJWT(['admin']), assessmentScoreController.update);
-router.delete('/assessment_scores/:id', authenticateJWT(['admin']), assessmentScoreController.delete);
+router.post('/assessment_scores', authenticateJWT(['user']), assessmentScoreController.create);
+router.get('/assessment_scores', authenticateJWT(['user']), assessmentScoreController.getAll);
+router.get('/assessment_scores/student/:id', authenticateJWT(['user']), assessmentScoreController.getAllByStudentId);
+router.get('/assessment_scores/:id', authenticateJWT(['user']), assessmentScoreController.getOne);
+router.put('/assessment_scores/:id', authenticateJWT(['user']), assessmentScoreController.update);
+router.delete('/assessment_scores/:id', authenticateJWT(['user']), assessmentScoreController.delete);
 
 // Search Route for Dynamic Queries
-router.get('/search/student', authenticateJWT(['user']), student.getFiltered);
+router.get('/search/student', authenticateJWT(['user','admin']), student.getFiltered);
 
 router.get('/search', authenticateJWT(['user']), searchController.search);
 

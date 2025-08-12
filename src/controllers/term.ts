@@ -84,6 +84,17 @@ export default {
     }
   },
 
+  async getActive(req: Request, res: Response) {
+    try {
+      const year = await db.term.findOne({
+        where: { active: true },
+      });
+      res.status(200).json(year);
+    } catch (err: any) {
+      res.status(500).json({ error: "Internal Server Error", details: err.message });
+    }
+  },
+
   async delete(req: Request, res: Response): Promise<any> {
     try {
       const { id } = req.params;

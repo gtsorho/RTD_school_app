@@ -3,40 +3,40 @@ import axios from 'axios';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { LoaderService } from '../../loader.service';
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-
-
 export class StudentsService {
-
   private authTeacherSubject = new BehaviorSubject<any>(null);
-authTeacher$ = this.authTeacherSubject.asObservable();
+  authTeacher$ = this.authTeacherSubject.asObservable();
 
+  constructor(private loaderService: LoaderService) {}
 
-
-  constructor(private loaderService: LoaderService,) { }
-
-  getStudents(classId: number|string, studentName: string, subjectId: number | string): Observable<any> {
+  getStudents(
+    classId: number | string,
+    studentName: string,
+    subjectId: number | string
+  ): Observable<any> {
     return new Observable((observer) => {
-      axios.get(`${this.loaderService.baseUrl}/search/student`, {
-        params: {
-          classId,
-          studentName,
-          subjectId
-        },
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${this.getCookie('token')}`,
-        }
-      })
-      .then((response) => {
-        observer.next(response.data);
-        observer.complete();
-      })
-      .catch((error: any) => {
-        console.log(error);
-        observer.error(error);
-      });
+      axios
+        .get(`${this.loaderService.baseUrl}/search/student`, {
+          params: {
+            classId,
+            studentName,
+            subjectId,
+          },
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${this.getCookie('token')}`,
+          },
+        })
+        .then((response) => {
+          observer.next(response.data);
+          observer.complete();
+        })
+        .catch((error: any) => {
+          console.log(error);
+          observer.error(error);
+        });
     });
   }
 
@@ -44,29 +44,27 @@ authTeacher$ = this.authTeacherSubject.asObservable();
     return new Observable((observer) => {
       const authUser = this.loaderService.getTokenData('id');
       console.log('Authenticated User ID:', authUser);
-      axios.get(`${this.loaderService.baseUrl}/auth/teacher/${authUser}`, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${this.getCookie('token')}`,
-        }
-      })
-      .then((response) => {
-        observer.next(response.data);
-        observer.complete();
-      })
-      .catch((error: any) => {
-        console.log(error);
-        observer.error(error);
-      });
+      axios
+        .get(`${this.loaderService.baseUrl}/auth/teacher/${authUser}`, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${this.getCookie('token')}`,
+          },
+        })
+        .then((response) => {
+          observer.next(response.data);
+          observer.complete();
+        })
+        .catch((error: any) => {
+          console.log(error);
+          observer.error(error);
+        });
     });
   }
 
-
   setAuthTeacher(teacher: any): void {
-      this.authTeacherSubject.next(teacher);
+    this.authTeacherSubject.next(teacher);
   }
-
-
 
   getCookie(cname: string): string {
     let name = cname + '=';

@@ -6,7 +6,7 @@ import bcrypt from "bcrypt";
 import ExcelJS from "exceljs";
 import fs from "fs";
 import path from "path";
-import { Op } from "sequelize";
+import { Op, where, fn, col } from "sequelize";
 
 const studentSchema = {
   create: Joi.object({
@@ -46,7 +46,7 @@ export default {
       const { error, value } = studentSchema.create.validate(req.body);
       if (error)
         return res.status(400).json({ error: error.details[0].message });
-      
+
       // Check if a student with the same name (case insensitive) already exists
       const existingStudent = await db.student.findOne({
         where: db.Sequelize.where(
@@ -232,7 +232,11 @@ export default {
         ] = ((row.values as Array<any>) || []).slice(1); // skip first undefined
 
         const classData = await db.class.findOne({
-          where: { name: class_name },
+          where: where(
+            fn("LOWER", col("name")),
+            Op.like,
+            class_name.toLowerCase()
+          ),
         });
 
         if (!classData) {
@@ -388,7 +392,7 @@ export default {
     }
   },
 
-async getFiltered(req: Request, res: Response): Promise<any> {
+  async getFiltered(req: Request, res: Response): Promise<any> {
     try {
       const { classId, studentName, subjectId } = req.query;
 
@@ -402,17 +406,19 @@ async getFiltered(req: Request, res: Response): Promise<any> {
       // Build include for subjects
       const teacherInclude: any = {
         model: db.teacher,
-        as: 'teachers',
+        as: "teachers",
         through: { attributes: [] },
       };
 
       if (subjectId) {
-        teacherInclude.include = [{
-          model: db.subject,
-          as: 'subjects',
-          where: { id: subjectId },
-          through: { attributes: [] }
-        }];
+        teacherInclude.include = [
+          {
+            model: db.subject,
+            as: "subjects",
+            where: { id: subjectId },
+            through: { attributes: [] },
+          },
+        ];
       }
 
       const students = await db.student.findAll({
@@ -420,18 +426,53 @@ async getFiltered(req: Request, res: Response): Promise<any> {
         include: [
           {
             model: db.class,
-            as: 'class',
-            include: [teacherInclude]
-          }
-        ]
+            as: "class",
+            include: [teacherInclude],
+          },
+          {
+            model: db.assessmentScore,
+            as: "scores",
+            include: [
+              {
+                model: db.assessment,
+                as: "assessment",
+                where: { subject_id: subjectId },
+                include: [
+                  {
+                    model: db.academicYear,
+                    as: "academicYear",
+                    where: { active: true },
+                  },
+                  { model: db.term, as: "term", where: { active: true } },
+                ],
+              },
+            ],
+          },
+          {
+            model: db.finalAssessment,
+            as: "finalAssessments",
+            include: [
+              {
+                model: db.academicYear,
+                as: "academicYear",
+                where: { active: true },
+              },
+              {
+                model:db.subject,
+                as: "subject",
+              },
+              { model: db.term, as: "term", where: { active: true } },
+            ],
+          },
+        ],
       });
 
       res.status(200).json(students);
     } catch (err: any) {
       res.status(500).json({
         error: "Internal Server Error",
-        details: err.message
+        details: err.message,
       });
     }
-  }
+  },
 };

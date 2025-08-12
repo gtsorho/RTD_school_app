@@ -27,6 +27,26 @@ export class TermService {
         });
     })
   }
+
+  getActiveTerm(): Observable<any> {
+    return new Observable((observer) => {
+      axios.get(`${this.loaderService.baseUrl}/terms/active`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${this.getCookie('token')}`,
+          }
+        }
+      ).then((response) => {
+        observer.next(response.data);
+        observer.complete();
+      })
+        .catch((error: any) => {
+          console.log(error);
+        });
+    })
+  }
+
   getCookie(cname: string): string {
     let name = cname + '=';
     let ca = document.cookie.split(';');

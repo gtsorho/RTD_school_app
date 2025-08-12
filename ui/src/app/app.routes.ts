@@ -11,18 +11,28 @@ import { ClassComponent } from './admin/class/class.component';
 import { StudentComponent } from './admin/student/student.component';
 import { HomeComponent } from './main/home/home.component';
 import { StudentsComponent } from './main/students/students.component';
+import { GradeComponent } from './main/grade/grade.component';
+import { AssessmentComponent } from './admin/assessment/assessment.component';
+import { ClassesComponent } from './main/classes/classes.component';
+import { ReportComponent } from './admin/report/report.component';
+import { AuthGuard } from './auth.guard';
 
 
 export const routes: Routes = [
     { path: '', component: LoginComponent },
-    { path: 'main', component: MainComponent,
+    { path: 'main', component: MainComponent,  canActivate: [AuthGuard], data: { role: 'admin' },
         children: [
             { path: 'home', component: HomeComponent },
             { path: 'students', component: StudentsComponent },
+            { path: 'grade', component: GradeComponent },
+            { path: 'class', component: ClassesComponent },
+
+
             // { path: '**', component: PageNotFoundComponent }
         ]
     },
-    { path: 'admin', component: AdminComponent,
+    
+    { path: 'admin', component: AdminComponent,  canActivate: [AuthGuard], data: { role: 'admin' },
         children: [
             { path: 'adminselection', component: AdminSelectionComponent },
             { path: 'acadamicyear', component: AcadamicYearComponent},
@@ -31,6 +41,11 @@ export const routes: Routes = [
             { path: 'subjects', component: SubjectComponent}, 
             { path: 'class', component: ClassComponent}, 
             { path: 'student', component: StudentComponent}, 
+            { path: 'assessment', component: AssessmentComponent}, 
+            { path: 'report', component: ReportComponent}, 
+
+
+
 
 
 

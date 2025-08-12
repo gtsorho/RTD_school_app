@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, Renderer2, OnDestroy } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterModule, RouterOutlet } from '@angular/router';
 import { LoaderService } from '../loader.service';
 import { interval, Subscription } from 'rxjs';
 import { StudentsService } from './students/students.service';
 
 @Component({
   selector: 'app-main',
-  imports: [CommonModule, RouterOutlet],
+  imports: [CommonModule, RouterOutlet, RouterLink, RouterModule],
   templateUrl: './main.component.html',
   styleUrl: './main.component.scss',
 })

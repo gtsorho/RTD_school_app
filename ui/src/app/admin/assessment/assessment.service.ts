@@ -6,32 +6,13 @@ import { LoaderService } from '../../loader.service';
 @Injectable({
   providedIn: 'root'
 })
-export class AcadamicYearService {
+export class AssessmentService {
 
   constructor(private loaderService: LoaderService) { }
 
-  getYears(): Observable<any> {
+  getAssessments(): Observable<any> {
     return new Observable((observer) => {
-      axios.get(`${this.loaderService.baseUrl}/years`,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${this.getCookie('token')}`,
-          }
-        }
-      ).then((response) => {
-        observer.next(response.data);
-        observer.complete();
-      })
-        .catch((error: any) => {
-          console.log(error);
-        });
-    })
-  }
-
-    getActiveYear(): Observable<any> {
-    return new Observable((observer) => {
-      axios.get(`${this.loaderService.baseUrl}/years/active`,
+      axios.get(`${this.loaderService.baseUrl}/assessments`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -62,5 +43,4 @@ export class AcadamicYearService {
     }
     return '';
   }
-
 }

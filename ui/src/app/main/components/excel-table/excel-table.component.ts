@@ -1,41 +1,53 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component , Output, EventEmitter} from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Input } from '@angular/core';
+import { GradeService } from '../../grade/grade.service';
+import { SpinnerComponent } from '../../../components/spinner/spinner.component';
 
 @Component({
   selector: 'app-excel-table',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, SpinnerComponent],
   templateUrl: './excel-table.component.html',
   styleUrl: './excel-table.component.scss'
 })
 export class ExcelTableComponent {
-  books = [
-    { title: 'To Kill a Mockingbird', author: 'Harper Lee', year: 1960, genre: 'Fiction' },
-    { title: '1984', author: 'George Orwell', year: 1949, genre: 'Dystopian' },
-    { title: 'The Great Gatsby', author: 'F. Scott Fitzgerald', year: 1925, genre: 'Classic' },
-    { title: 'The Catcher in the Rye', author: 'J.D. Salinger', year: 1951, genre: 'Fiction' },
-    { title: 'Pride and Prejudice', author: 'Jane Austen', year: 1813, genre: 'Romance' },
-    { title: 'Moby-Dick', author: 'Herman Melville', year: 1851, genre: 'Adventure' },
-    { title: 'Brave New World', author: 'Aldous Huxley', year: 1932, genre: 'Science Fiction' },
-    { title: 'The Hobbit', author: 'J.R.R. Tolkien', year: 1937, genre: 'Fantasy' },
-    { title: 'War and Peace', author: 'Leo Tolstoy', year: 1869, genre: 'Historical' },
-    { title: 'Crime and Punishment', author: 'Fyodor Dostoevsky', year: 1866, genre: 'Philosophical' }
-  ];
+  loading: boolean = false;
+
+  constructor(private gradeService: GradeService) {}
+  @Input() assessments: any[] = [];
+  @Output() assessmentUpdated = new EventEmitter<string>();
 
   editCell: { index: number, column: string } | null = null;
   draggedRowIndex: number | null = null;
+ 
 
-  enableEdit(index: number, column: string) {
-    this.editCell = { index, column };
+  onScoreChange(index: number, event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    const newScore = parseFloat(inputElement.value);
+    this.assessments[index].score = newScore;
+
+
+    this.updateAssessment(this.assessments[index].id, {
+        score: newScore,
+        student_id: this.assessments[index].student_id,
+      }
+    )
   }
 
-  isEditing(index: number, column: string): boolean {
-    return this.editCell?.index === index && this.editCell?.column === column;
+  onEffortChange(index: number, event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    const newEffort = parseInt(inputElement.value, 10);
+
+    this.assessments[index].effort = newEffort;
+    
+      this.updateAssessment(this.assessments[index].id, {
+        effort: newEffort,
+        student_id: this.assessments[index].student_id,
+      }
+    )
   }
 
-  disableEdit() {
-    this.editCell = null;
-  }
 
   drag(event: DragEvent, index: number) {
     this.draggedRowIndex = index;
@@ -49,8 +61,23 @@ export class ExcelTableComponent {
   drop(event: DragEvent) {
     event.preventDefault();
     if (this.draggedRowIndex !== null) {
-      this.books.splice(this.draggedRowIndex, 1);
+      this.assessments.splice(this.draggedRowIndex, 1);
       this.draggedRowIndex = null;
     }
+  }
+
+    async updateAssessment(id:string | number | undefined ,data:any): Promise<void> {
+    this.loading = true;
+    const { student_id, ...dataWithoutStudentId } = data;
+
+    this.gradeService.updateAssessment(id, dataWithoutStudentId).subscribe({
+      next: (response) => {
+        this.assessmentUpdated.emit(data.student_id as string);        
+        this.loading = false;
+      },
+      error: (error) => { 
+        console.error('Error updating assessment:', error);
+      }
+    });
   }
 }

@@ -73,9 +73,8 @@ export default {
 
   async getActive(req: Request, res: Response) {
     try {
-      const { id } = req.params;
       const year = await db.academicYear.findOne({
-        where: { id, active: true },
+        where: { active: true },
       });
       res.status(200).json(year);
     } catch (err: any) {

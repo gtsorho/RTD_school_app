@@ -1,75 +1,88 @@
-  <div class=" top-2 right-2">
-    <i class="bi bi-trash3-fill text-red-500 hover:text-red-700 transform transition-transform duration-200 hover:text-sm"
-       (dragover)="allowDrop($event)"
+
+  <div class="fixed bottom-6 right-6 z-50"        
+      (dragover)="allowDrop($event)"
        (drop)="drop($event)">
-    </i>
+    <button class="rounded-full bg-black text-white px-4 py-3 shadow-lg hover:bg-gray-800 transition-colors duration-200 focus:outline-none">
+      <i class="bi bi-trash3 text-xl"></i>
+    </button>
   </div>
-  <div class=" flex flex-col w-full h-4/5 overflow-auto bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-300  rounded-lg bg-clip-border">
+
+
+  <div class=" flex flex-col w-full rounded  overflow-auto bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-300   shadow-lg bg-clip-border">
 
   <!-- Trash Icon -->
 
 
   <!-- Table -->
-  <table class="table-auto w-full relative">
-    <thead class="sticky top-0 z-50 bg-slate-200 dark:bg-slate-700">
+  <table class="table-auto w-full overflow-auto lg:max-h-[7in] relative ">
+    <thead class="sticky top-0 z-50 bg-red-700 rounded text-white">
       <tr>
-        <th class="p-4 border-b border-slate-300 dark:border-slate-600 sticky left-0 z-[60] bg-slate-200 dark:bg-slate-700">
-          Book Title
+        <th class="p-4 border-b border-slate-300 text-start dark:border-slate-600 sticky left-0 z-[60] bg-red-700">
+          Ass. Title
         </th>
-        <th class="p-4 border-b border-slate-300 dark:border-slate-600">
-          Author
+        <th class="p-4 border-b border-slate-300 text-start dark:border-slate-600">
+          Type
         </th>
-        <th class="p-4 border-b border-slate-300 dark:border-slate-600">
-          Year
+        <th class="p-4 border-b border-slate-300 text-start dark:border-slate-600">
+          Term/Year
         </th>
-        <th class="p-4 border-b border-slate-300 dark:border-slate-600">
-          Genre
+        <th class="p-4 border-b border-slate-300 text-start dark:border-slate-600">
+          Weight
+        </th>
+        <th class="p-4 border-b border-slate-300 text-start dark:border-slate-600">
+          Score
+        </th>
+        <th class="p-4 border-b border-slate-300 text-start dark:border-slate-600">
+          Effort
         </th>
       </tr>
     </thead>
 
     <tbody>
-      <tr *ngFor="let book of books; let i = index"
-          class="group hover:bg-slate-100 dark:hover:bg-slate-700">
+      <tr *ngFor="let assessment of assessments; let i = index"
+          class="group hover:bg-slate-100 dark:hover:bg-slate-700 font-mono text-gray-500">
         
         <!-- Draggable Title -->
-        <td class="p-1 border-b border-slate-200 dark:border-slate-700 sticky left-0 z-40 cursor-move bg-slate-50 dark:bg-slate-900 group-hover:bg-slate-200 dark:group-hover:bg-slate-800"
+        <td class="px-4 border-b border-slate-200 font-bold dark:border-slate-700 sticky left-0 z-40 cursor-move bg-slate-50 dark:bg-slate-900 group-hover:bg-slate-200 dark:group-hover:bg-slate-800"
             draggable="true"
             (dragstart)="drag($event, i)">
-          {{ book.title }}
+          {{ assessment.title }}
         </td>
 
         <!-- Author Cell (Editable) -->
-        <td class="p-1 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 group-hover:bg-slate-100 dark:group-hover:bg-slate-700"
-            (dblclick)="enableEdit(i, 'author')">
-          <div *ngIf="!isEditing(i, 'author')">{{ book.author }}</div>
-          <input *ngIf="isEditing(i, 'author')"
-                 class="w-full p-0 bg-slate-100 dark:bg-slate-700 outline-none"
-                 [(ngModel)]="book.author"
-                 (blur)="disableEdit()" />
+        <td class="px-4 border-b border-slate-200 capitalize dark:border-slate-700 bg-white dark:bg-slate-800 group-hover:bg-slate-100 dark:group-hover:bg-slate-700">
+          <div >{{ assessment.assessment.type }}</div>
         </td>
 
         <!-- Year Cell (Editable) -->
-        <td class="p-1 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 group-hover:bg-slate-200 dark:group-hover:bg-slate-800"
-            (dblclick)="enableEdit(i, 'year')">
-          <div *ngIf="!isEditing(i, 'year')">{{ book.year }}</div>
-          <input *ngIf="isEditing(i, 'year')"
-                 class="w-full p-0 bg-slate-100 dark:bg-slate-700 outline-none"
-                 [(ngModel)]="book.year"
-                 (blur)="disableEdit()" />
-        </td>
-
+        <td class="px-4 capitalize border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 group-hover:bg-slate-200 dark:group-hover:bg-slate-800">
+          <div>{{ assessment.assessment.academicYear.name }}</div>
+          <div class="text-xs">{{assessment.assessment.term.name}}</div>
         <!-- Genre Cell (Editable) -->
-        <td class="p-1 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 group-hover:bg-slate-100 dark:group-hover:bg-slate-700"
-            (dblclick)="enableEdit(i, 'genre')">
-          <div *ngIf="!isEditing(i, 'genre')">{{ book.genre }}</div>
-          <input *ngIf="isEditing(i, 'genre')"
-                 class="w-full p-0 bg-slate-100 dark:bg-slate-700 outline-none"
-                 [(ngModel)]="book.genre"
-                 (blur)="disableEdit()" />
+        <td class="px-4 capitalize border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 group-hover:bg-slate-100 dark:group-hover:bg-slate-700">
+          <div>{{ assessment.weight }}</div>
         </td>
-
+        <td class="px-4 capitalize border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 group-hover:bg-slate-100 dark:group-hover:bg-slate-700">
+          <input
+              type="text"
+              [(ngModel)]="assessment.score"
+              (change)="onScoreChange(i, $event)"
+              class="h-8 border border-transparent text-gray-700 focus:border-1 focus:border-red-700 focus:ring-red-700 focus:outline-none mt-1 rounded px-4 w-full "
+          />
+        </td>
+        <td class="px-4 capitalize border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 group-hover:bg-slate-100 dark:group-hover:bg-slate-700">
+          <input
+            type="text"
+            [(ngModel)]="assessment.effort"
+            (change)="onEffortChange(i, $event)"
+            class="h-8 border border-transparent text-gray-700 focus:border-red-700 focus:ring-red-700 focus:outline-none mt-1 rounded px-4 w-full bg-transparent "
+          />
+        </td>
       </tr>
     </tbody>
   </table>
+
+  <div *ngIf="loading" class="z-50 absolute inset-0 flex items-center justify-center bg-gray-500 bg-opacity-70">
+    <app-spinner color="spinner-white" size="spinner-sm" ></app-spinner>
+</div>
 </div>

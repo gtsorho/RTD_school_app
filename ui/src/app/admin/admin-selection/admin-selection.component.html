@@ -1,5 +1,5 @@
 <div class="px-3 md:lg:xl:px-10 py-10 bg-opacity-10 flex justify-center">
-  <div class="px-3 md:px-10 py-10 bg-opacity-10 flex justify-center">
+  <div class="px-3 md:px-10 py-10 bg-opacity-10 flex justify-center lg:max-h-[calc(100vh-200px)] overflow-y-auto">
     <div class="flex flex-wrap justify-center gap-6 max-w-7xl">
       <div
         class="w-full sm:w-[47%] md:w-[30%]"
@@ -36,7 +36,10 @@
         </div>
       </div>
 
-      <div class="w-full sm:w-[47%] md:w-[30%]" [routerLink]="['/admin/subjects']">
+      <div
+        class="w-full sm:w-[47%] md:w-[30%]"
+        [routerLink]="['/admin/subjects']"
+      >
         <div
           class="h-[250px] p-10 flex flex-col items-center text-center shadow-xl bg-white group hover:bg-slate-50 cursor-pointer"
         >
@@ -52,7 +55,10 @@
         </div>
       </div>
 
-      <div class="w-full sm:w-[47%] md:w-[30%]" [routerLink]="['/admin/student']">
+      <div
+        class="w-full sm:w-[47%] md:w-[30%]"
+        [routerLink]="['/admin/student']"
+      >
         <div
           class="h-[250px] p-10 flex flex-col items-center text-center shadow-xl bg-white group hover:bg-slate-50 cursor-pointer"
         >
@@ -68,7 +74,10 @@
         </div>
       </div>
 
-      <div class="w-full sm:w-[47%] md:w-[30%]" [routerLink]="['/admin/teacher']">
+      <div
+        class="w-full sm:w-[47%] md:w-[30%]"
+        [routerLink]="['/admin/teacher']"
+      >
         <div
           class="h-[250px] p-10 flex flex-col items-center text-center shadow-xl bg-white group hover:bg-slate-50 cursor-pointer"
         >
@@ -95,6 +104,37 @@
           <p class="text-xl font-medium text-slate-700 mt-3">Classes</p>
           <p class="mt-2 text-sm text-slate-500">
             Organize and manage class structures, schedules, and assignments.
+          </p>
+        </div>
+      </div>
+      <div class="w-full sm:w-[47%] md:w-[30%]" [routerLink]="['/admin/assessment']">
+        <div
+          class="h-[250px] p-10 flex flex-col items-center text-center shadow-xl bg-white group hover:bg-slate-50 cursor-pointer"
+        >
+          <span
+            class="p-5 rounded-full bg-gray-700  text-white shadow-lg shadow-blue-200"
+          >
+            <img src="assets/images/icons/grade_white.png" width="40" />
+          </span>
+          <p class="text-xl font-medium text-slate-700 mt-3">Assessments</p>
+          <p class="mt-2 text-sm text-slate-500">
+            Manage assessments, including assignments, tests, and grading.
+          </p>
+        </div>
+      </div>
+      <div class="w-full sm:w-[47%] md:w-[30%]" [routerLink]="['/admin/report']">
+        <div
+          class="h-[250px] p-10 flex flex-col items-center text-center shadow-xl bg-white group hover:bg-slate-50 cursor-pointer"
+        >
+          <span
+            class="p-5 rounded-full bg-yellow-500  text-white shadow-lg shadow-blue-200"
+          >
+            <i class="bi text-4xl px-0.5 bi-file-earmark-ruled"></i>
+          </span>
+          <p class="text-xl font-medium text-slate-700 mt-3">Reports</p>
+          <p class="mt-2 text-sm text-slate-500">
+            Generate and view reports on student performance, and
+            assessments.
           </p>
         </div>
       </div>
@@ -126,15 +166,23 @@
       class="fixed top-0 right-0 z-20 w-96 h-screen pt-20 bg-white shadow-lg transition-all duration-500 transform translate-x-full peer-checked:translate-x-0"
     >
       <div class="px-6 py-4 h-full">
-        <div *ngIf="!isAddUser" class="flow-root  ">
-            <div class="flex justify-between items-center mb-2" >                
-                <h2 class="text-lg font-bold text-gray-700">User List</h2>
-                <button class=" bg-teal-800 hover:bg-teal-700 text-white font-semibold rounded-md py-1 px-4 " (click)="isAddUser = true" >Add User</button>
-            </div>
-          <ul role="list" class="border-t-4 border-red-700  divide-y divide-gray-200 max-h-[90%] overflow-y-auto dark:divide-gray-700">
+        <div *ngIf="!isAddUser" class="flow-root">
+          <div class="flex justify-between items-center mb-2">
+            <h2 class="text-lg font-bold text-gray-700">User List</h2>
+            <button
+              class="bg-teal-800 hover:bg-teal-700 text-white font-semibold rounded-md py-1 px-4"
+              (click)="isAddUser = true"
+            >
+              Add User
+            </button>
+          </div>
+          <ul
+            role="list"
+            class="border-t-4 border-red-700 divide-y divide-gray-200 max-h-[90%] overflow-y-auto dark:divide-gray-700"
+          >
             <li class="py-3 sm:py-4" *ngFor="let here_user of users">
               <div class="flex items-center space-x-4">
-                <div class="flex-shrink-0"> 
+                <div class="flex-shrink-0">
                   <img
                     class="w-8 h-8 rounded-full"
                     [src]="here_user.photoUrl || defaultPhotoUrl"
@@ -143,23 +191,33 @@
                 </div>
                 <div class="flex-1 min-w-0">
                   <p
-                    class="text-sm  capitalize font-bold text-gray-900 truncate dark:text-white"
+                    class="text-sm capitalize font-bold text-gray-900 truncate dark:text-white"
                   >
-                  <i class="bi bi-shield-lock-fill text-red-700 " *ngIf="here_user.role == 'admin'"  ></i>
-                  <i class="bi bi-person-fill text-blue-700" *ngIf="here_user.role == 'user'" ></i>
-                    {{here_user.name}}
+                    <i
+                      class="bi bi-shield-lock-fill text-red-700"
+                      *ngIf="here_user.role == 'admin'"
+                    ></i>
+                    <i
+                      class="bi bi-person-fill text-blue-700"
+                      *ngIf="here_user.role == 'user'"
+                    ></i>
+                    {{ here_user.name }}
                   </p>
                   <p class="text-sm text-gray-500 truncate dark:text-gray-400">
-                    {{here_user.email}}
+                    {{ here_user.email }}
                   </p>
                 </div>
                 <div
                   class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white"
                 >
-                  <i (click)="isAddUser = true; isUpdate= true; user = here_user"
+                  <i
+                    (click)="
+                      isAddUser = true; isUpdate = true; user = here_user
+                    "
                     class="fa-solid fa-pen-to-square text-teal-500 hover:text-teal-700 cursor-pointer"
                   ></i>
-                  <i (click)="deleteUser(here_user.id)"
+                  <i
+                    (click)="deleteUser(here_user.id)"
                     class="fa-solid fa-circle-xmark text-red-500 hover:text-red-700 cursor-pointer ml-2"
                   ></i>
                 </div>
@@ -167,183 +225,184 @@
             </li>
           </ul>
         </div>
-        
+
         <div *ngIf="isAddUser" class="overflow-y-auto h-full pb-4">
-                <div class="flex justify-between items-center mb-2">
-                    <i (click)="isAddUser = false" class="fa-solid text-2xl fa-circle-chevron-up transition-transform duration-300 hover:rotate-[-90deg]"></i>
-    
-                    <h3
-                    class="text-lg leading-6 font-bold text-gray-700 pt-2"
-                    id="modal-headline"
-                    >
-                    {{ isUpdate ? "Update" : "Add" }} User
-                    </h3>
-                </div>
-                <div class=" h-[90%] flex items-center">
-                    <form
-                        (ngSubmit)="isUpdate ? updateForm() : submitForm()"
-                        #formRef="ngForm"
-                        class="w-full inline-block bg-white rounded-sm text-left transform transition-all sm:my-2 sm:align-middle sm:max-w-lg sm:w-full"
-                        role="dialog"
-                        aria-modal="true"
-                        aria-labelledby="modal-headline"
-                    >
-                        <div class="bg-white px-1 pt-1 pb-1 sm:p-1 sm:pb-4">
-                        <div class="sm:flex sm:items-start">
-                            <div
-                            class="mt-2 text-center sm:mt-0 sm:ml-4 sm:text-left w-full"
-                            >
-                            <div class="mt-2 ">
-                                <div
-                                class="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-6"
-                                >
-                                <div class="md:col-span-6">
-                                    <div class="col-span-6 ml-2 sm:col-span-4 md:mr-3">
-                                    <div class="text-center">
-                                        <!-- File Input -->
-                                        <input
-                                        type="file"
-                                        #photoInput
-                                        class="hidden"
-                                        (change)="onFileChange($event)"
-                                        />
-        
-                                        <!-- Trigger Button -->
-                                        <button
-                                        type="button"
-                                        class="inline-flex items-center px-4 py-2 focus:outline-none transition ease-in-out duration-150 ml-3"
-                                        (click)="photoInput.click()"
-                                        >
-                                        <!-- Current Profile Photo -->
-                                        <div class="mt-2" *ngIf="!photoPreview">
-                                            <img
-                                            [src]="defaultPhotoUrl"
-                                            class="w-36 h-36 m-auto rounded-full shadow"
-                                            alt="Profile photo"
-                                            />
-                                        </div>
-        
-                                        <!-- New Profile Photo Preview -->
-                                        <div class="mt-2" *ngIf="photoPreview">
-                                            <span
-                                            class="block w-36 h-36 rounded-full m-auto shadow"
-                                            [ngStyle]="{
-                                                'background-image':
-                                                'url(' + photoPreview + ')',
-                                                'background-size': 'cover',
-                                                'background-repeat': 'no-repeat',
-                                                'background-position': 'center center'
-                                            }"
-                                            ></span>
-                                        </div>
-                                        </button>
-                                    </div>
-                                    </div>
+          <div class="flex justify-between items-center mb-2">
+            <i
+              (click)="isAddUser = false"
+              class="fa-solid text-2xl fa-circle-chevron-up transition-transform duration-300 hover:rotate-[-90deg]"
+            ></i>
+
+            <h3
+              class="text-lg leading-6 font-bold text-gray-700 pt-2"
+              id="modal-headline"
+            >
+              {{ isUpdate ? "Update" : "Add" }} User
+            </h3>
+          </div>
+          <div class="h-[90%] flex items-center">
+            <form
+              (ngSubmit)="isUpdate ? updateForm() : submitForm()"
+              #formRef="ngForm"
+              class="w-full inline-block bg-white rounded-sm text-left transform transition-all sm:my-2 sm:align-middle sm:max-w-lg sm:w-full"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="modal-headline"
+            >
+              <div class="bg-white px-1 pt-1 pb-1 sm:p-1 sm:pb-4">
+                <div class="sm:flex sm:items-start">
+                  <div
+                    class="mt-2 text-center sm:mt-0 sm:ml-4 sm:text-left w-full"
+                  >
+                    <div class="mt-2">
+                      <div
+                        class="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-6"
+                      >
+                        <div class="md:col-span-6">
+                          <div class="col-span-6 ml-2 sm:col-span-4 md:mr-3">
+                            <div class="text-center">
+                              <!-- File Input -->
+                              <input
+                                type="file"
+                                #photoInput
+                                class="hidden"
+                                (change)="onFileChange($event)"
+                              />
+
+                              <!-- Trigger Button -->
+                              <button
+                                type="button"
+                                class="inline-flex items-center px-4 py-2 focus:outline-none transition ease-in-out duration-150 ml-3"
+                                (click)="photoInput.click()"
+                              >
+                                <!-- Current Profile Photo -->
+                                <div class="mt-2" *ngIf="!photoPreview">
+                                  <img
+                                    [src]="defaultPhotoUrl"
+                                    class="w-36 h-36 m-auto rounded-full shadow"
+                                    alt="Profile photo"
+                                  />
                                 </div>
-                                <div class="md:col-span-6">
-                                    <label for="name" class="text-gray-600">Name</label>
-                                    <input
-                                    type="text"
-                                    id="name"
-                                    name="name"
-                                    [(ngModel)]="user.name"
-                                    placeholder="Johndoe"
-                                    class="h-8 border text-gray-700 focus:border-red-700 focus:ring-red-700 focus:outline-none mt-1 rounded px-4 w-full bg-gray-50"
-                                    />
+
+                                <!-- New Profile Photo Preview -->
+                                <div class="mt-2" *ngIf="photoPreview">
+                                  <span
+                                    class="block w-36 h-36 rounded-full m-auto shadow"
+                                    [ngStyle]="{
+                                      'background-image':
+                                        'url(' + photoPreview + ')',
+                                      'background-size': 'cover',
+                                      'background-repeat': 'no-repeat',
+                                      'background-position': 'center center'
+                                    }"
+                                  ></span>
                                 </div>
-                                <div class="md:col-span-6">
-                                    <label for="email" class="text-gray-600">Email</label>
-                                    <input
-                                    type="email"
-                                    id="email"
-                                    name="email"
-                                    [(ngModel)]="user.email"
-                                    placeholder="johndoe@abc.com"
-                                    class="h-8 border text-gray-700 focus:border-red-700 focus:ring-red-700 focus:outline-none mt-1 rounded px-4 w-full bg-gray-50"
-                                    />
-                                </div>
-                                <div class="md:col-span-3">
-                                    <label for="password" class="text-gray-600"
-                                    >Password</label
-                                    >
-                                    <input
-                                    type="password"
-                                    id="password"
-                                    name="password"
-                                    [(ngModel)]="user.password"
-                                    placeholder="*********"
-                                    class="h-8 border text-gray-700 focus:border-red-700 focus:ring-red-700 focus:outline-none mt-1 rounded px-4 w-full bg-gray-50"
-                                    />
-                                </div>
-                                <div class="md:col-span-3">
-                                    <label for="password" class="text-gray-600"
-                                    >Repeat Password</label
-                                    >
-                                    <input
-                                    type="password"
-                                    id="password"
-                                    name="confirmPassword"
-                                    [(ngModel)]="user.confirmPassword"
-                                    placeholder="*********"
-                                    class="h-8 border text-gray-700 focus:border-red-700 focus:ring-red-700 focus:outline-none mt-1 rounded px-4 w-full bg-gray-50"
-                                    />
-                                </div>
-                                <div class="md:col-span-4">
-                                    <label for="phone" class="text-gray-600"
-                                    >Phone</label
-                                    >
-                                    <input
-                                    type="text"
-                                    id="phone"
-                                    name="phone"
-                                    [(ngModel)]="user.phone"
-                                    placeholder="+251 911 234 567"
-                                    class="h-8 border text-gray-700 focus:border-red-700 focus:ring-red-700 focus:outline-none mt-1 rounded px-4 w-full bg-gray-50"
-                                    />
-                                </div>
-                                <div class="md:col-span-2">
-                                    <label for="start_date" class="text-gray-600"
-                                    >Select Role</label
-                                    >
-                                    <select
-                                    id="start_date"
-                                    name="start_date"
-                                    [(ngModel)]="user.role"
-                                    class="h-8 border text-gray-700 focus:border-red-700 focus:ring-red-700 focus:outline-none mt-1 rounded px-4 w-full bg-gray-50"
-                                    >
-                                    <option value="admin">Admin</option>
-                                    <option value="user">User</option>
-                                    </select>
-                                </div>
-                                </div>
+                              </button>
                             </div>
-                            </div>
+                          </div>
                         </div>
+                        <div class="md:col-span-6">
+                          <label for="name" class="text-gray-600">Name</label>
+                          <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            [(ngModel)]="user.name"
+                            placeholder="Johndoe"
+                            class="h-8 border text-gray-700 focus:border-red-700 focus:ring-red-700 focus:outline-none mt-1 rounded px-4 w-full bg-gray-50"
+                          />
                         </div>
-                        <div *ngIf="errorMessage" class="text-red-500 text-sm mt-2">
-                          {{ errorMessage }}
+                        <div class="md:col-span-6">
+                          <label for="email" class="text-gray-600">Email</label>
+                          <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            [(ngModel)]="user.email"
+                            placeholder="johndoe@abc.com"
+                            class="h-8 border text-gray-700 focus:border-red-700 focus:ring-red-700 focus:outline-none mt-1 rounded px-4 w-full bg-gray-50"
+                          />
                         </div>
-                        <div
-                        class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse"
-                        >
-                        <button
-                            type="submit"
-                            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-500 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3  sm:text-sm"
-                        >
-                            Submit
-                        </button>
+                        <div class="md:col-span-3">
+                          <label for="password" class="text-gray-600"
+                            >Password</label
+                          >
+                          <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            [(ngModel)]="user.password"
+                            placeholder="*********"
+                            class="h-8 border text-gray-700 focus:border-red-700 focus:ring-red-700 focus:outline-none mt-1 rounded px-4 w-full bg-gray-50"
+                          />
                         </div>
-                        <div
-                        *ngIf="loading"
-                        class="absolute inset-0 flex items-center justify-center bg-gray-500 bg-opacity-70"
-                        >
-                        <app-spinner
-                            color="spinner-white"
-                            size="spinner-sm"
-                        ></app-spinner>
+                        <div class="md:col-span-3">
+                          <label for="password" class="text-gray-600"
+                            >Repeat Password</label
+                          >
+                          <input
+                            type="password"
+                            id="password"
+                            name="confirmPassword"
+                            [(ngModel)]="user.confirmPassword"
+                            placeholder="*********"
+                            class="h-8 border text-gray-700 focus:border-red-700 focus:ring-red-700 focus:outline-none mt-1 rounded px-4 w-full bg-gray-50"
+                          />
                         </div>
-                    </form>
+                        <div class="md:col-span-4">
+                          <label for="phone" class="text-gray-600">Phone</label>
+                          <input
+                            type="text"
+                            id="phone"
+                            name="phone"
+                            [(ngModel)]="user.phone"
+                            placeholder="+251 911 234 567"
+                            class="h-8 border text-gray-700 focus:border-red-700 focus:ring-red-700 focus:outline-none mt-1 rounded px-4 w-full bg-gray-50"
+                          />
+                        </div>
+                        <div class="md:col-span-2">
+                          <label for="start_date" class="text-gray-600"
+                            >Select Role</label
+                          >
+                          <select
+                            id="start_date"
+                            name="start_date"
+                            [(ngModel)]="user.role"
+                            class="h-8 border text-gray-700 focus:border-red-700 focus:ring-red-700 focus:outline-none mt-1 rounded px-4 w-full bg-gray-50"
+                          >
+                            <option value="admin">Admin</option>
+                            <option value="user">User</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
+              </div>
+              <div *ngIf="errorMessage" class="text-red-500 text-sm mt-2">
+                {{ errorMessage }}
+              </div>
+              <div
+                class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse"
+              >
+                <button
+                  type="submit"
+                  class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-500 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:text-sm"
+                >
+                  Submit
+                </button>
+              </div>
+              <div
+                *ngIf="loading"
+                class="absolute inset-0 flex items-center justify-center bg-gray-500 bg-opacity-70"
+              >
+                <app-spinner
+                  color="spinner-white"
+                  size="spinner-sm"
+                ></app-spinner>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>

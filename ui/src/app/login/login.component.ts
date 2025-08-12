@@ -1,8 +1,11 @@
-import { Component, Renderer2 } from '@angular/core';
+import { Component, Renderer2, inject } from '@angular/core';
 import { LoaderService } from '../loader.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+
+import { MsalService } from '@azure/msal-angular';
+
 import axios from 'axios';
 import { StudentsService } from '../main/students/students.service';
 
@@ -26,6 +29,8 @@ export class LoginComponent {
   };
   errorMessage: any;
 
+  private msalService = inject(MsalService);
+
   constructor(
     private renderer: Renderer2,
     private loaderService: LoaderService,
@@ -36,6 +41,7 @@ export class LoginComponent {
       this.isDarkMode = res;
     });
   }
+
   login() {
     axios
       .post(`${this.loaderService.baseUrl}/login`, this.userData, {
@@ -45,26 +51,6 @@ export class LoginComponent {
       })
       .then((response) => {
         this.setCookie('token', response.data.token, 0.042);
-        const role = this.loaderService.getTokenData('role');
-
-        if (role === 'admin' && this.signinAs === 'admin') {
-          this.router.navigate(['/admin/adminselection']);
-        } else if (role === 'user' && this.signinAs === 'teacher') {
-
-          this.studentsService.getAuthTeacher().subscribe({
-            next: (data) => {
-              if (data || data.length > 0) {
-                this.studentsService.setAuthTeacher(data);
-                this.router.navigate(['/main/students']);
-              }
-            },
-            error: (error) => {
-              console.error('Error fetching authenticated teacher:', error);
-            },
-          });
-        }else{
-          console.error('Invalid role or signinAs value');
-        }
       })
       .catch((error) => {
         console.log(error);
@@ -75,7 +61,36 @@ export class LoginComponent {
         }, 5000);
       });
   }
-  
+
+MSALlogin() {
+  this.msalService.loginPopup().subscribe({
+    next: async (result) => {
+      console.log('Logged in:', result);
+
+      // Get Azure AD access token
+      const tokenResponse = await this.msalService.acquireTokenSilent({
+        scopes: ['api://1d1e71b9-a285-41a2-acab-0eeb6e867057/.default']
+      }).toPromise();
+
+      const accessToken = tokenResponse?.accessToken;
+      console.log('Azure AD Access Token:', accessToken);
+
+      // Send token to backend
+      const res = await axios.post(`${this.loaderService.baseUrl}/login`, {token:accessToken}, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      console.log('Backend Response:', res.data);
+    },
+    error: (err) => console.error(err),
+  });
+}
+
+  logout() {
+    this.msalService.logoutPopup();
+  }
 
   toggleDarkMode() {
     this.isDarkMode = !this.isDarkMode;
