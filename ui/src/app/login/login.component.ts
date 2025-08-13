@@ -61,32 +61,46 @@ export class LoginComponent {
         }, 5000);
       });
   }
-
-MSALlogin() {
+// ['api://1d1e71b9-a285-41a2-acab-0eeb6e867057/.default']
+async MSALlogin() {
   this.msalService.loginPopup().subscribe({
     next: async (result) => {
-      console.log('Logged in:', result);
+      // Set active account
+      const account = result.account;
+      this.msalService.instance.setActiveAccount(account);
 
-      // Get Azure AD access token
-      const tokenResponse = await this.msalService.acquireTokenSilent({
-        scopes: ['api://1d1e71b9-a285-41a2-acab-0eeb6e867057/.default']
-      }).toPromise();
+      // Acquire access token silently
+      this.msalService.acquireTokenSilent({
+        account,
+        scopes: ['api://ff5ed12d-0e20-49ad-8a43-55b36d0d12bb/.default']
+      }).subscribe(async (tokenResponse) => {
+        const accessToken = tokenResponse?.accessToken;
+        console.log('Azure AD Access Token:', accessToken);
 
-      const accessToken = tokenResponse?.accessToken;
-      console.log('Azure AD Access Token:', accessToken);
+        // try {
+        //   // Send token to backend
+        //   const res = await axios.post(
+        //     `${this.loaderService.baseUrl}/login`,
+        //     {}, 
+        //     {
+        //       headers: {
+        //         'Content-Type': 'application/json',
+        //         'Authorization': `Bearer ${accessToken}`,
+        //       },
+        //     }
+        //   );
 
-      // Send token to backend
-      const res = await axios.post(`${this.loaderService.baseUrl}/login`, {token:accessToken}, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        //   console.log('Backend Response:', res.data);
+
+        // } catch (error) {
+        //   console.error('Error sending token to backend:', error);
+        // }
       });
-
-      console.log('Backend Response:', res.data);
     },
     error: (err) => console.error(err),
   });
 }
+
 
   logout() {
     this.msalService.logoutPopup();
@@ -109,3 +123,5 @@ MSALlogin() {
     document.cookie = cname + '=' + cvalue + ';' + expires + ';path=/';
   }
 }
+        // "ng-apexcharts": "^1.15.0",
+        // "apexcharts": "^4.3.0",

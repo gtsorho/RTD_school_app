@@ -3,6 +3,8 @@ import Joi from "joi";
 import db from "../models";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import passport from '../middleware/passport.config';
+
 
 const schema = {
   create: Joi.object({
@@ -29,27 +31,45 @@ const schema = {
 };
 
 export default {
+  // async login(req: Request, res: Response): Promise<any> {
+  //   const { email, password } = req.body;
+  //   try {
+  //     const user = await db.user.findOne({ where: { email } });
+
+  //     if (!user || !(await user.isValidPassword(password))) {
+  //       return res.status(401).json({ message: "Invalid credentials" });
+  //     }
+
+  //     const token = jwt.sign(
+  //       { name: user.name, email: user.email, id: user.id, role: user.role },
+  //       process.env.JWT_KEY!,
+  //       { expiresIn: "1h" }
+  //     );
+
+  //     res.json({ token });
+  //   } catch (error) {
+  //     console.error(error);
+  //     res.status(500).json({ message: "Internal server error" });
+  //   }
+  // },
+
+
   async login(req: Request, res: Response): Promise<any> {
-    const { email, password } = req.body;
-    try {
-      const user = await db.user.findOne({ where: { email } });
+  const { email, password, azureToken } = req.body;
 
-      if (!user || !(await user.isValidPassword(password))) {
-        return res.status(401).json({ message: "Invalid credentials" });
-      }
-
-      const token = jwt.sign(
-        { name: user.name, email: user.email, id: user.id, role: user.role },
-        process.env.JWT_KEY!,
-        { expiresIn: "1h" }
-      );
-
-      res.json({ token });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: "Internal server error" });
+  try {
+    if (azureToken) {
+      return handleAzureLogin(req, res);
+    } else if (email && password) {
+      return handleLocalLogin(email, password, res);
+    } else {
+      return res.status(400).json({ message: "Invalid login request" });
     }
-  },
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+},
 
   async create(req: Request, res: Response): Promise<any> {
     try {
@@ -160,3 +180,55 @@ export default {
     }
   },
 };
+
+
+function createJwt(user: any) {
+  return jwt.sign(
+    { name: user.name, email: user.email, id: user.id, role: user.role },
+    process.env.JWT_KEY!,
+    { expiresIn: "1h" }
+  );
+}
+
+// 🔹 Local login handler
+async function handleLocalLogin(email: string, password: string, res: Response) {
+  const user = await db.user.findOne({ where: { email } });
+
+  if (!user || !(await user.isValidPassword(password))) {
+    return res.status(401).json({ message: "Invalid credentials" });
+  }
+
+  const token = createJwt(user);
+  return res.json({ token });
+}
+
+// 🔹 Azure login handler
+function handleAzureLogin(req: Request, res: Response) {
+  passport.authenticate("oauth-bearer", { session: false }, async (err: any, azureUser: any) => {
+    if (err || !azureUser) {
+      return res.status(401).json({ message: "Invalid Azure token" });
+    }
+
+      const oid = azureUser.oid;
+      const email = azureUser.email || azureUser.upn || '';
+      const name = azureUser.name || azureUser.given_name || '';
+
+
+    // Find or create user
+    const [dbUser] = await db.users.findOrCreate({
+        where: { oid: oid },
+        defaults: {
+          name: name,
+          email: email,
+          password: Math.random().toString(36).slice(-10), // random string
+          role: 'user',
+          oid: oid
+        }
+      });
+
+
+    const token = createJwt(dbUser);
+    return res.json({ token });
+  })(req, res);
+}
+

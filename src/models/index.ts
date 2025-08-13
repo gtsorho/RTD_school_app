@@ -120,7 +120,7 @@ async function connectWithRetry() {
       await sequelize.authenticate();
       console.log("✅ Database connection has been established successfully.");
         
-       sequelize.sync({ alter: true, force: false })
+       sequelize.sync({ alter: false, force: false })
       .then(() => {
         console.log("📦 Database synced with models.");
         seedUser();
